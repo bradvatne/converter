@@ -11,11 +11,15 @@ export class Input extends Component {
     };
   }
 
+
+
   render() {
+
     return (
       <div className="text-center">
                 <input
             type="text"
+            required pattern="[0,1]"
             id="userInput"
             value={this.state.input}
             autoComplete="off"
@@ -23,6 +27,7 @@ export class Input extends Component {
               this.setState({ input: e.target.value });
             }}
           />
+
         <form id="userInput">
           Binary
           <input
