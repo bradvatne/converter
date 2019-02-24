@@ -1,8 +1,5 @@
-/* eslint-disable default-case */
-/* eslint-disable no-fallthrough */
 import React, { Component } from "react";
 import Output from "./Output";
-import { binaryToDecimal, decimalToHex, hexToDecimal, decimalToBinary} from './Logic.js';
 
 export class Input extends Component {
   constructor(props) {
@@ -16,7 +13,16 @@ export class Input extends Component {
 
   render() {
     return (
-      <div className="input-form">
+      <div className="text-center">
+                <input
+            type="text"
+            id="userInput"
+            value={this.state.input}
+            autoComplete="off"
+            onChange={e => {
+              this.setState({ input: e.target.value });
+            }}
+          />
         <form id="userInput">
           Binary
           <input
@@ -52,14 +58,6 @@ export class Input extends Component {
               this.setState({ inputType: e.target.value, input: " " });
             }}
           />
-          <input
-            type="text"
-            id="userInput"
-            value={this.state.input}
-            onChange={e => {
-              this.setState({ input: e.target.value });
-            }}
-          />
         </form>
 
         <form id="userInput">
@@ -88,7 +86,6 @@ export class Input extends Component {
             name="outputType"
             onChange={e => this.setState({ outputType: e.target.value })}
           />
-          <input type="text" id="output" defaultValue={this.state.output} />
         </form>
         <Output
           input={this.state.input}
