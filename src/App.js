@@ -1,48 +1,56 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import "./index.css";
-import Input from "./Input.js";
+import Output from "./Output.js";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputType: 'binary'
+      inputType: "binary",
+      input: ""
     };
   }
 
-  
+  handleClick = e => {
+    console.log(e)
+    this.setState({inputType: e.target.value.toLowerCase()})
+  };
+
+  handleChange = input => {
+    this.setState({input: input})
+  }
+
   render() {
+    const categories = ["Binary", "Decimal", "Hex"];
     return (
       <div className="container text-align-center">
-      <div style={{width: "1024px"}} className="card text-center">
-        <div className="card-header container">
-        <h1>Binary, Decimal, Hex Conversion Tool</h1>
-          <ul className="nav nav-tabs card-header-tabs col">
-            <li className="nav-item">
-              <a className="nav-link active">
-                Binary
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link">
-                Decimal
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link">
-                Hex
-              </a>
-            </li>
-          </ul>
+        <div style={{ maxWidth: "1024px" }} className="card text-center">
+          <div className="card-header container">
+            <h1>Binary, Decimal, and Hex Conversion Tool</h1>
+            <ul className="nav nav-tabs card-header-tabs col">
+              {categories.map(category => {
+                return (
+                  <li key={category} className="nav-item">
+                    <button
+                      value={category}
+                      className={
+                        category.toLowerCase() == this.state.inputType
+                          ? "nav-link btn btn-link active"
+                          : "nav-link btn btn-link"
+                      }
+                      onClick={(e) => this.handleClick(e)}
+                    >
+                      {category}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="card-body" />
+          <Output input={this.state.input} inputType={this.state.inputType} outputType={this.state.outputType} handleChange={this.handleChange}/>
         </div>
-        <div className="card-body">
-          <h5 className="card-title">Enter a Binary umber</h5>
-          <input style={{width: "40%"}} type="text" className="form-control mx-auto"/>
-          <a className="btn btn-primary">
-            Go somewhere
-          </a>
-        </div>
-      </div>
       </div>
     );
   }
