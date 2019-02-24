@@ -12,8 +12,8 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-      <h1>Binary, Decimal, Hex Converter</h1>
+      <div className="container">
+      <h1 className="text-center">Binary, Decimal, Hex Converter</h1>
       <Input/>
       </div>
     );
