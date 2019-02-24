@@ -1,3 +1,5 @@
+/* eslint-disable default-case */
+/* eslint-disable no-fallthrough */
 import React, { Component } from "react";
 import Output from "./Output";
 
@@ -6,49 +8,73 @@ export class Input extends Component {
     super(props);
     this.state = {
       input: " ",
-      before: "binary",
-      after: "binary",
+      inputType: "binary",
+      outputType: "binary",
       output: " "
     };
   }
 
-  //Passed as a callback for setState when a radio button is clicked
-  handleChange = () => {
-    console.log("SUBMITTED");
-    console.log("STATE ACTUALLY IS: " + this.state.after);
+  doMath = () => {
 
-    // switch (this.state.before) {
-    //   case "binary":
-        switch (this.state.after) {
-
-          case "decimal":
-            console.log(this.state.after + "SHOULD BE: decimal");
-            let newOutput = this.binaryToDecimal(this.state.input);
-            this.setState({ output: newOutput });
-            console.log(this.state.output + "<-- past state SHOULD BE: " + newOutput);
-            break;
-
-          case "hex":
-            console.log(this.state.after + "SHOULD BE: hex");
-            let hexValue = this.decimalToHex(
-              this.binaryToDecimal(this.state.input));
-            this.setState({ output: hexValue });
-            console.log(this.state.output + "SHOULD BE: " + hexValue);
-            break;
-          
+    if (this.state.inputType === 'binary') {
+        switch (this.state.outputType) {
           case "binary":
-          console.log(this.state.after + "SHOULD BE: binary");
-          this.setState({ output: this.state.input });
-          console.log(this.state.output + "SHOULD BE: " + newOutput);
-          break;
-
+            return this.state.input;
+          case "decimal":
+            return this.binaryToDecimal(this.state.input);
+          case "hex":
+            return this.decimalToHex(this.binaryToDecimal(this.state.input));
           default:
-          console.log('ruh roh');
             break;
         }
+      }
+
+      else if (this.state.inputType === 'decimal') {
+        switch (this.state.outputType) {
+          case 'binary':
+          return this.decimalToBinary(this.state.input);
+          case "decimal":
+          return this.state.input;
+          case "hex":
+          return this.state.hexToDecimal(this.state.input);
+        }
+      }
+
+      else if (this.state.inputType === "hex"){
+        switch (this.state.outputType) {
+          case "binary":
+            break;
+          case "decimal":
+            break;
+          case "hex":
+            break;
+        }
+      }
+    }
+
+  handleOutputChange = () => {
+    let newState = this.doMath()
+    this.setState({output: newState})
+
+    // let inputType = this.state.inputType;
+    // let input = this.state.input;
+
+    // switch (this.state.outputType) {
+    //   case "decimal":
+    //     let newOutput = this.binaryToDecimal(this.state.input);
+    //     this.setState({ output: newOutput });
+    //     break;
+    //   case "hex":
+    //     let hexValue = this.decimalToHex(
+    //       this.binaryToDecimal(this.state.input)
+    //     );
+    //     this.setState({ output: hexValue });
+    //     break;
+    //   case "binary":
+    //     this.setState({ output: this.state.input });
     //     break;
     //   default:
-    //     return;
+    //     break;
     // }
   };
 
@@ -76,8 +102,20 @@ export class Input extends Component {
       }
       Math.floor(parseInt(decimal) / 16);
     }
-    result = parseInt(decimal) + result;
+    if (parseInt(decimal) > 9) {
+      decimal = this.convertToLetter(decimal);
+    }
+    result = decimal + result;
     return result;
+  }
+
+  hexToDecimal(value) {
+    let length = value.length - 1;
+    let sum = 0;
+    for (let i = length; i >= 0; i--) {
+      sum += this.convertToNumber(value[i]) * Math.pow(16, length - i);
+    }
+    return sum;
   }
 
   convertToLetter(number) {
@@ -98,8 +136,26 @@ export class Input extends Component {
         return number;
     }
   }
-  //-----------------End-Math-----------------//
 
+  convertToNumber(number) {
+    switch (number) {
+      case "A":
+        return 10;
+      case "B":
+        return 11;
+      case "C":
+        return 12;
+      case "D":
+        return 13;
+      case "E":
+        return 14;
+      case "F":
+        return 15;
+      default:
+        return number;
+    }
+  }
+  //-----------------End-Math-----------------//
 
   //-----------------Render-----------------//
   render() {
@@ -111,10 +167,10 @@ export class Input extends Component {
             type="radio"
             id="binary"
             value="binary"
-            name="before"
+            name="inputType"
             defaultChecked
             onChange={e => {
-              this.setState({ before: e.target.value });
+              this.setState({ inputType: e.target.value });
             }}
           />
           Decimal
@@ -122,9 +178,9 @@ export class Input extends Component {
             type="radio"
             id="decimal"
             value="decimal"
-            name="before"
+            name="inputType"
             onChange={e => {
-              this.setState({ before: e.target.value });
+              this.setState({ inputType: e.target.value });
             }}
           />
           Hex
@@ -132,9 +188,9 @@ export class Input extends Component {
             type="radio"
             id="hex"
             value="hex"
-            name="before"
+            name="inputType"
             onChange={e => {
-              this.setState({ before: e.target.value });
+              this.setState({ inputType: e.target.value });
             }}
           />
           <input
@@ -147,15 +203,19 @@ export class Input extends Component {
           />
         </form>
 
-        <form id="userInput" onSubmit={e => this.handleChange}>
+        <form id="userInput" onSubmit={e => this.handleOutputChange}>
           Binary
           <input
             type="radio"
             id="binary"
             value="binary"
-            name="after"
+            name="outputType"
+            defaultChecked
             onChange={e =>
-              this.setState({ after: e.target.value }, this.handleChange)
+              this.setState(
+                { outputType: e.target.value },
+                this.handleOutputChange
+              )
             }
           />
           Decimal
@@ -163,9 +223,12 @@ export class Input extends Component {
             type="radio"
             id="decimal"
             value="decimal"
-            name="after"
+            name="outputType"
             onChange={e =>
-              this.setState({ after: e.target.value }, this.handleChange)
+              this.setState(
+                { outputType: e.target.value },
+                this.handleOutputChange
+              )
             }
           />
           Hex
@@ -173,13 +236,15 @@ export class Input extends Component {
             type="radio"
             id="hex"
             value="hex"
-            name="after"
+            name="outputType"
             onChange={e =>
-              this.setState({ after: e.target.value }, this.handleChange)
+              this.setState(
+                { outputType: e.target.value },
+                this.handleOutputChange
+              )
             }
           />
           <input type="text" id="output" defaultValue={this.state.output} />
-          <input type="submit" id="submit" />
         </form>
         <Output output={this.state.output} />
       </div>
