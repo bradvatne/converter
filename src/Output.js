@@ -1,5 +1,5 @@
 /* eslint-disable default-case */
-import React, { Fragment } from "react";
+import React from "react";
 import {
   binaryToDecimal,
   decimalToHex,
@@ -8,10 +8,36 @@ import {
 } from "./Logic.js";
 
 export default function Output(props) {
-  const outputTypes = ["Binary", "Decimal", "Hex"];
+  const capitalizeFirstLetter = string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const twoComplement = () => {
+    if (props.input == "") return 0;
+    let input = props.input;
+    let type = props.inputType;
+    if (type == "hex") input = decimalToBinary(hexToDecimal(input));
+    let length = input.length - 1;
+    let output = [];
+
+    for (let i = length; i >= 0; i--) {
+      input[i] == 0 ? output.unshift(1) : output.unshift(0);
+    }
+    for (let j = length; j >= 0; j--) {
+      if (output[j] == 0) {
+        output[j] = 1;
+        if (type == 'hex') output = decimalToHex(binaryToDecimal(output));
+        return output.toString().replace(/,/g, "");
+      } else {
+        output[j] = 0;
+      }
+    }
+    if (type == 'hex') output = decimalToHex(binaryToDecimal(output));
+    return output.toString().replace(/,/g, "");
+  };
 
   const doMath = outputType => {
-    if (props.input == '') return 0;
+    if (props.input == "") return 0;
 
     if (props.inputType === "binary") {
       switch (outputType) {
@@ -46,7 +72,7 @@ export default function Output(props) {
   };
 
   return (
-    <div className="container" style={{ width: "50%" }}>
+    <div className="container">
       <div className="row">
         <input
           type="text"
@@ -56,18 +82,28 @@ export default function Output(props) {
           onChange={event => props.handleChange(event.target.value)}
         />
       </div>
-        <div className="card">
-          <div className="card-header">Binary Value</div>
-          <div className="card-body">{doMath("binary")}</div>
-        </div>
-        <div className="card">
-          <div className="card-header">Decimal Value</div>
-          <div className="card-body">{doMath("decimal")}</div>
-        </div>        <div className="card">
-          <div className="card-header">Hex Value</div>
-          <div className="card-body">{doMath("hex")}</div>
-        </div>
-        <br/>
+      <div className="card shadow-sm">
+        <div className="card-header">Binary Value</div>
+        <div className="card-body">{doMath("binary")}</div>
       </div>
+      <br />
+      <div className="card shadow-sm">
+        <div className="card-header">Decimal Value</div>
+        <div className="card-body">{doMath("decimal")}</div>
+      </div>
+      <br />
+      <div className="card shadow-sm">
+        <div className="card-header">Hex Value</div>
+        <div className="card-body">{doMath("hex")}</div>
+      </div>
+      <br />
+      <div className="card shadow-sm">
+        <div className="card-header">
+          2's Complement of {capitalizeFirstLetter(props.inputType)} Value
+        </div>
+        <div className="card-body">{twoComplement()}</div>
+      </div>
+      <br />
+    </div>
   );
 }

@@ -25,9 +25,9 @@ class App extends Component {
     const categories = ["Binary", "Decimal", "Hex"];
     return (
       <div className="container text-align-center">
-        <div style={{ maxWidth: "1024px" }} className="card text-center">
+        <div className="card text-center m-2 shadow">
           <div className="card-header container">
-            <h1>Binary, Decimal, and Hex Conversion Tool</h1>
+            <h3>Binary, Decimal, and Hex Conversion Tool</h3>
             <ul className="nav nav-tabs card-header-tabs col">
               {categories.map(category => {
                 return (
@@ -48,8 +48,13 @@ class App extends Component {
               })}
             </ul>
           </div>
-          <div className="card-body" />
+          <div className="card-body">
           <Output input={this.state.input} inputType={this.state.inputType} outputType={this.state.outputType} handleChange={this.handleChange}/>
+        </div>
+        <div className="card-header">
+          <a href="https://github.com/notbrad/converter" target="blank"><div className="text-right">Github Link</div></a>
+          <div className="text-right">Made by Brad Vatne</div>
+        </div>
         </div>
       </div>
     );
