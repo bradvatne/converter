@@ -73,7 +73,8 @@ export const decimalToHex = (value) => {
   }
 
   const convertToNumber = (number) => {
-    switch (number) {
+    let letter = number.toString().toUpperCase();
+    switch (letter) {
       case "A":
         return 10;
       case "B":
