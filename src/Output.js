@@ -8,9 +8,6 @@ import {
 } from "./Logic.js";
 
 export default function Output(props) {
-  const capitalizeFirstLetter = string => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
 
   const twoComplement = () => {
     if (props.input == "") return 0;
@@ -77,33 +74,44 @@ export default function Output(props) {
         <input
           type="text"
           value={props.input}
-          className="form-control m-3"
+          className="form-control m-3 ml-5 mr-5"
           placeholder={"Enter a " + props.inputType + " value"}
           onChange={event => props.handleChange(event.target.value)}
         />
       </div>
-      <div className="card shadow-sm">
+      <div className="container row ml-0">
+      <div className="col-lg">
+      <div className="card shadow-sm m-2">
         <div className="card-header">Binary Value</div>
         <div className="card-body">{doMath("binary")}</div>
       </div>
-      <br />
-      <div className="card shadow-sm">
-        <div className="card-header">Decimal Value</div>
-        <div className="card-body">{doMath("decimal")}</div>
       </div>
-      <br />
-      <div className="card shadow-sm">
-        <div className="card-header">Hex Value</div>
-        <div className="card-body">{doMath("hex")}</div>
-      </div>
-      <br />
-      <div className="card shadow-sm">
+      <div className="col-lg">
+      <div className="card shadow-sm m-2">
         <div className="card-header">
-          2's Complement of {capitalizeFirstLetter(props.inputType)} Value
+          2's Complement
         </div>
         <div className="card-body">{twoComplement()}</div>
       </div>
+      </div>
+      </div>
+      <div className="container row ml-0">
+      <div className="col-lg">
+      <div className="card shadow-sm m-2">
+        <div className="card-header">Decimal Value</div>
+        <div className="card-body">{doMath("decimal")}</div>
+      </div>
+      </div>
+      <br />
+      <div className="col-lg">
+      <div className="card shadow-sm m-2">
+        <div className="card-header">Hex Value</div>
+        <div className="card-body">{doMath("hex")}</div>
+      </div>
+      </div>
+      </div>
       <br />
     </div>
+   
   );
 }
